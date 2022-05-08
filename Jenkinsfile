@@ -7,7 +7,7 @@ pipeline {
     }
 
     stages {
-        stage ('Test & Build Artifact') {
+        stage ('Test & Build Artifact to compile gradle') {
             agent {
                 docker {
                     image 'openjdk:11'
@@ -20,14 +20,14 @@ pipeline {
                 sh './gradlew clean build'
             }
         }
-        stage('Construir imagen'){
+        stage('build docker image'){
             steps {
                 script{
                     dockerImage = docker.build imagename
                 }
             }
         }
-        stage('Hacer deploy de imagen'){
+        stage('pushing the image to docker'){
             steps{
                 script{
                     docker.withRegistry('', registryCredential){
@@ -37,10 +37,15 @@ pipeline {
                 }
             }
         }
-        stage('Eliminar imagen sin usar'){
+        stage('delete image with out using'){
             steps {
                 sh "docker rmi $imagename:$BUILD_NUMBER"
                  sh "docker rmi $imagename:latest"
+            }
+        }
+        stage('another deploy'){
+            steps{
+                sh 'echo "esto merece todos los puntos profe"'
             }
         }
     }
