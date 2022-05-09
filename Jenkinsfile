@@ -46,6 +46,7 @@ pipeline {
         stage('another deploy'){
             steps{
                 sh 'echo "esto merece todos los puntos profe"'
+                sh 'echo  "Simon"'
             }
         }
     }
